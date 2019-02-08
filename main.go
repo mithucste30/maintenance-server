@@ -22,7 +22,7 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-	fs := http.FileServer(http.Dir("/public"))
+	fs := http.FileServer(http.Dir("public"))
 	mux.Handle("/", middleware(fs))
 
 	log.Print(fmt.Sprintf("Listening on %s...", port))
