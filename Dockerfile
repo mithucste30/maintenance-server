@@ -8,15 +8,15 @@ COPY . /appbuild
 RUN set -ex \
     && go version \
     && cd /appbuild \
-    && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o server \
-    && rm -rf *.mod *.go
+    && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o server
 
 # Build deployable server
 FROM alpine:latest
 
 WORKDIR /app
 
-COPY --from=server_build /appbuild /app/
+COPY --from=server_build /appbuild/server /app/server
+COPY public /app/public
 
 EXPOSE 80
 
