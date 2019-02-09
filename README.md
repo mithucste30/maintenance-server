@@ -26,7 +26,7 @@ Example `docker-compose.yml` configuration:
 version: '3.7'
 
 services:
-  mjml:
+  fallback:
     image: adrianrudnik/maintenance-server
     ports:
       - 8080:80
@@ -58,7 +58,7 @@ networks:
     external: true
 
 services:
-  fallback:
+  server:
     image: adrianrudnik/maintenance-server
     networks:
       - proxy6
