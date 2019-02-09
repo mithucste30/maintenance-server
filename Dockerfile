@@ -16,7 +16,7 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=server_build /appbuild/server /app/server
-COPY public /app/public
+COPY index.html /app/index.html
 
 EXPOSE 80
 
