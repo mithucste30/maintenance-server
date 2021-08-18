@@ -68,7 +68,7 @@ func main() {
 			}
 		}
 		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-		w.WriteHeader(http.StatusServiceUnavailable)
+		w.WriteHeader(http.StatusOK)
 	})
 
 	log.Print(fmt.Sprintf("Listening on %s...", port))
