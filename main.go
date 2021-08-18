@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -10,7 +11,7 @@ import (
 	"strings"
 )
 
-var port = ":80"
+var port = ":8080"
 
 type Message struct {
 	Content string
@@ -54,19 +55,30 @@ func main() {
 		}
 
 		// Override status to 503 and serve index
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if isJsonRequest(r){
+			w.Header().Set("Content-Type", "application/json")
+			content := Message{ Content: "We are currently under maintenance. Please try again after some moments"}
+			json.NewEncoder(w).Encode(content)
+		} else {
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			_, err := w.Write(index)
+
+			if err != nil {
+				log.Print("Failed to serve index.html")
+			}
+		}
 		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 		w.WriteHeader(http.StatusServiceUnavailable)
-
-		_, err := w.Write(index)
-
-		if err != nil {
-			log.Print("Failed to serve index.html")
-		}
 	})
 
 	log.Print(fmt.Sprintf("Listening on %s...", port))
 
 	err = http.ListenAndServe(port, nil)
 	log.Fatal(err)
+}
+
+func isJsonRequest(r *http.Request) bool  {
+	return r.Header.Get("Content-Type") == "application/json" ||
+		r.Header.Get("Accept") == "application/json" ||
+		strings.HasSuffix(r.URL.Path, ".json")
 }
